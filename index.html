@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet.photon.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.photon.js"></script>
+        <script src="data/voravies_qgis2web_1.js"></script>
+        <script src="data/incidencies_qgis2web_2.js"></script>
+        <script src="data/arbres_qgis2web_3.js"></script>
+        <script src="data/fonts_qgis2web_4.js"></script>
+        <script src="data/lavabos_qgis2web_5.js"></script>
+        <script src="data/banc_qgis2web_6.js"></script>
+        <script src="data/pas_de_vianants_qgis2web_7.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[42.49388236781127,1.4977548309134876],[42.49725246719257,1.5020517076246451]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // modify popup if contains media
+        function addClassToPopupIfMedia(content, popup) {
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            var imgTd = tempDiv.querySelector('td img');
+            if (imgTd) {
+                var src = imgTd.getAttribute('src');
+                if (/\.(jpg|jpeg|png|gif|bmp|webp|avif)$/i.test(src)) {
+                    popup._contentNode.classList.add('media');
+                    setTimeout(function() {
+                        popup.update();
+                    }, 10);
+                } else if (/\.(mp3|wav|ogg|aac)$/i.test(src)) {
+                    var audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = src;
+                    imgTd.parentNode.replaceChild(audio, imgTd);
+                    popup._contentNode.classList.add('media');
+                    setTimeout(function() {
+                        popup.setContent(tempDiv.innerHTML);
+                        popup.update();
+                    }, 10);
+                } else if (/\.(mp4|webm|ogg|mov)$/i.test(src)) {
+                    var video = document.createElement('video');
+                    video.controls = true;
+                    video.src = src;
+                    video.style.width = "400px";
+                    video.style.height = "300px";
+                    video.style.maxHeight = "60vh";
+                    video.style.maxWidth = "60vw";
+                    imgTd.parentNode.replaceChild(video, imgTd);
+                    popup._contentNode.classList.add('media');
+                    // Aggiorna il popup quando il video carica i metadati
+                    video.addEventListener('loadedmetadata', function() {
+                        popup.update();
+                    });
+                    setTimeout(function() {
+                        popup.setContent(tempDiv.innerHTML);
+                        popup.update();
+                    }, 10);
+                } else {
+                    popup._contentNode.classList.remove('media');
+                }
+            } else {
+                popup._contentNode.classList.remove('media');
+            }
+        }
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 0.673,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        function pop_voravies_qgis2web_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_voravies_qgis2web_1_0() {
+            return {
+                pane: 'pane_voravies_qgis2web_1',
+                opacity: 1,
+                color: 'rgba(253,191,111,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_voravies_qgis2web_1');
+        map.getPane('pane_voravies_qgis2web_1').style.zIndex = 401;
+        map.getPane('pane_voravies_qgis2web_1').style['mix-blend-mode'] = 'normal';
+        var layer_voravies_qgis2web_1 = new L.geoJson(json_voravies_qgis2web_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_voravies_qgis2web_1',
+            layerName: 'layer_voravies_qgis2web_1',
+            pane: 'pane_voravies_qgis2web_1',
+            onEachFeature: pop_voravies_qgis2web_1,
+            style: style_voravies_qgis2web_1_0,
+        });
+        bounds_group.addLayer(layer_voravies_qgis2web_1);
+        map.addLayer(layer_voravies_qgis2web_1);
+        function pop_incidencies_qgis2web_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_incidencies_qgis2web_2_0() {
+            return {
+                pane: 'pane_incidencies_qgis2web_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,26,28,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_incidencies_qgis2web_2');
+        map.getPane('pane_incidencies_qgis2web_2').style.zIndex = 402;
+        map.getPane('pane_incidencies_qgis2web_2').style['mix-blend-mode'] = 'normal';
+        var layer_incidencies_qgis2web_2 = new L.geoJson(json_incidencies_qgis2web_2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_incidencies_qgis2web_2',
+            layerName: 'layer_incidencies_qgis2web_2',
+            pane: 'pane_incidencies_qgis2web_2',
+            onEachFeature: pop_incidencies_qgis2web_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_incidencies_qgis2web_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_incidencies_qgis2web_2);
+        map.addLayer(layer_incidencies_qgis2web_2);
+        function pop_arbres_qgis2web_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_arbres_qgis2web_3_0() {
+            return {
+                pane: 'pane_arbres_qgis2web_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,160,44,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_arbres_qgis2web_3');
+        map.getPane('pane_arbres_qgis2web_3').style.zIndex = 403;
+        map.getPane('pane_arbres_qgis2web_3').style['mix-blend-mode'] = 'normal';
+        var layer_arbres_qgis2web_3 = new L.geoJson(json_arbres_qgis2web_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_arbres_qgis2web_3',
+            layerName: 'layer_arbres_qgis2web_3',
+            pane: 'pane_arbres_qgis2web_3',
+            onEachFeature: pop_arbres_qgis2web_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_arbres_qgis2web_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_arbres_qgis2web_3);
+        map.addLayer(layer_arbres_qgis2web_3);
+        function pop_fonts_qgis2web_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_fonts_qgis2web_4_0() {
+            return {
+                pane: 'pane_fonts_qgis2web_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/fonts_qgis2web_4.svg',
+            iconSize: [19.0, 19.0]
+        }),
+                interactive: false,
+            }
+        }
+        map.createPane('pane_fonts_qgis2web_4');
+        map.getPane('pane_fonts_qgis2web_4').style.zIndex = 404;
+        map.getPane('pane_fonts_qgis2web_4').style['mix-blend-mode'] = 'normal';
+        var layer_fonts_qgis2web_4 = new L.geoJson(json_fonts_qgis2web_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_fonts_qgis2web_4',
+            layerName: 'layer_fonts_qgis2web_4',
+            pane: 'pane_fonts_qgis2web_4',
+            onEachFeature: pop_fonts_qgis2web_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_fonts_qgis2web_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_fonts_qgis2web_4);
+        map.addLayer(layer_fonts_qgis2web_4);
+        function pop_lavabos_qgis2web_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_lavabos_qgis2web_5_0() {
+            return {
+                pane: 'pane_lavabos_qgis2web_5',
+                shape: 'triangle',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_lavabos_qgis2web_5');
+        map.getPane('pane_lavabos_qgis2web_5').style.zIndex = 405;
+        map.getPane('pane_lavabos_qgis2web_5').style['mix-blend-mode'] = 'normal';
+        var layer_lavabos_qgis2web_5 = new L.geoJson(json_lavabos_qgis2web_5, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_lavabos_qgis2web_5',
+            layerName: 'layer_lavabos_qgis2web_5',
+            pane: 'pane_lavabos_qgis2web_5',
+            onEachFeature: pop_lavabos_qgis2web_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_lavabos_qgis2web_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_lavabos_qgis2web_5);
+        map.addLayer(layer_lavabos_qgis2web_5);
+        function pop_banc_qgis2web_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_banc_qgis2web_6_0() {
+            return {
+                pane: 'pane_banc_qgis2web_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/banc_qgis2web_6.svg',
+            iconSize: [22.799999999999997, 22.799999999999997]
+        }),
+                interactive: false,
+            }
+        }
+        map.createPane('pane_banc_qgis2web_6');
+        map.getPane('pane_banc_qgis2web_6').style.zIndex = 406;
+        map.getPane('pane_banc_qgis2web_6').style['mix-blend-mode'] = 'normal';
+        var layer_banc_qgis2web_6 = new L.geoJson(json_banc_qgis2web_6, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_banc_qgis2web_6',
+            layerName: 'layer_banc_qgis2web_6',
+            pane: 'pane_banc_qgis2web_6',
+            onEachFeature: pop_banc_qgis2web_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_banc_qgis2web_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_banc_qgis2web_6);
+        map.addLayer(layer_banc_qgis2web_6);
+        function pop_pas_de_vianants_qgis2web_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_pas_de_vianants_qgis2web_7_0() {
+            return {
+                pane: 'pane_pas_de_vianants_qgis2web_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(243,166,178,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_pas_de_vianants_qgis2web_7');
+        map.getPane('pane_pas_de_vianants_qgis2web_7').style.zIndex = 407;
+        map.getPane('pane_pas_de_vianants_qgis2web_7').style['mix-blend-mode'] = 'normal';
+        var layer_pas_de_vianants_qgis2web_7 = new L.geoJson(json_pas_de_vianants_qgis2web_7, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_pas_de_vianants_qgis2web_7',
+            layerName: 'layer_pas_de_vianants_qgis2web_7',
+            pane: 'pane_pas_de_vianants_qgis2web_7',
+            onEachFeature: pop_pas_de_vianants_qgis2web_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_pas_de_vianants_qgis2web_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_pas_de_vianants_qgis2web_7);
+        map.addLayer(layer_pas_de_vianants_qgis2web_7);
+        var overlaysTree = [
+        {label: '<b>QGIS2WEB</b>',  selectAllCheckbox: true, children: [
+            {label: '<img src="legend/pas_de_vianants_qgis2web_7.png" /> pas_de_vianants_qgis2web', layer: layer_pas_de_vianants_qgis2web_7},
+            {label: '<img src="legend/banc_qgis2web_6.png" /> banc_qgis2web', layer: layer_banc_qgis2web_6},
+            {label: '<img src="legend/lavabos_qgis2web_5.png" /> lavabos_qgis2web', layer: layer_lavabos_qgis2web_5},
+            {label: '<img src="legend/fonts_qgis2web_4.png" /> fonts_qgis2web', layer: layer_fonts_qgis2web_4},
+            {label: '<img src="legend/arbres_qgis2web_3.png" /> arbres_qgis2web', layer: layer_arbres_qgis2web_3},
+            {label: '<img src="legend/incidencies_qgis2web_2.png" /> incidencies_qgis2web', layer: layer_incidencies_qgis2web_2},
+            {label: '<img src="legend/voravies_qgis2web_1.png" /> voravies_qgis2web', layer: layer_voravies_qgis2web_1},]},
+            {label: "Google Satellite", layer: layer_GoogleSatellite_0, radioGroup: 'bm' },]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: true,
+        });
+        lay.addTo(map);
+        setBounds();
+        </script>        
+    </body>
+</html>

@@ -42,11 +42,11 @@
         <script src="data/lavabos_4.js"></script>
         <script src="data/bancs_5.js"></script>
         <script src="data/incidencies_6.js"></script>
-        <script src="data/pasdevianants_7.js"></script>
+        <script src="data/pas_de_vianants_7.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[42.48818554543733,1.49014599487048],[42.501657220914026,1.511161808614123]]);
+        }).fitBounds([[42.488098185762546,1.4827157491238105],[42.50182983067332,1.5108776281935954]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -411,10 +411,16 @@
         });
         bounds_group.addLayer(layer_incidencies_6);
         map.addLayer(layer_incidencies_6);
-        function pop_pasdevianants_7(feature, layer) {
+        function pop_pas_de_vianants_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(String(feature.properties['layer']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['path'] !== null ? autolinker.link(String(feature.properties['path']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -424,9 +430,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_pasdevianants_7_0() {
+        function style_pas_de_vianants_7_0() {
             return {
-                pane: 'pane_pasdevianants_7',
+                pane: 'pane_pas_de_vianants_7',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -436,33 +442,33 @@
                 weight: 1,
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(243,166,178,1.0)',
+                fillColor: 'rgba(232,113,141,1.0)',
                 interactive: false,
             }
         }
-        map.createPane('pane_pasdevianants_7');
-        map.getPane('pane_pasdevianants_7').style.zIndex = 407;
-        map.getPane('pane_pasdevianants_7').style['mix-blend-mode'] = 'normal';
-        var layer_pasdevianants_7 = new L.geoJson(json_pasdevianants_7, {
+        map.createPane('pane_pas_de_vianants_7');
+        map.getPane('pane_pas_de_vianants_7').style.zIndex = 407;
+        map.getPane('pane_pas_de_vianants_7').style['mix-blend-mode'] = 'normal';
+        var layer_pas_de_vianants_7 = new L.geoJson(json_pas_de_vianants_7, {
             attribution: '',
             interactive: false,
-            dataVar: 'json_pasdevianants_7',
-            layerName: 'layer_pasdevianants_7',
-            pane: 'pane_pasdevianants_7',
-            onEachFeature: pop_pasdevianants_7,
+            dataVar: 'json_pas_de_vianants_7',
+            layerName: 'layer_pas_de_vianants_7',
+            pane: 'pane_pas_de_vianants_7',
+            onEachFeature: pop_pas_de_vianants_7,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_pasdevianants_7_0(feature));
+                return L.circleMarker(latlng, style_pas_de_vianants_7_0(feature));
             },
         });
-        bounds_group.addLayer(layer_pasdevianants_7);
-        map.addLayer(layer_pasdevianants_7);
+        bounds_group.addLayer(layer_pas_de_vianants_7);
+        map.addLayer(layer_pas_de_vianants_7);
         var overlaysTree = [
         {label: '<b>QGIS2WEB</b>',  selectAllCheckbox: true, children: [
-            {label: '<img src="legend/pasdevianants_7.png" /> pas de vianants', layer: layer_pasdevianants_7},
+            {label: '<img src="legend/pas_de_vianants_7.png" /> pas_de_vianants', layer: layer_pas_de_vianants_7},
             {label: '<img src="legend/incidencies_6.png" /> incidencies', layer: layer_incidencies_6},
             {label: '<img src="legend/bancs_5.png" /> bancs', layer: layer_bancs_5},
             {label: '<img src="legend/lavabos_4.png" /> lavabos', layer: layer_lavabos_4},

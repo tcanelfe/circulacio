@@ -39,14 +39,14 @@
         <script src="data/voravies_1.js"></script>
         <script src="data/arbres_2.js"></script>
         <script src="data/fonts_3.js"></script>
-        <script src="data/lavabos_4.js"></script>
-        <script src="data/bancs_5.js"></script>
+        <script src="data/banc_qgis2web_4.js"></script>
+        <script src="data/lavabos_qgis2web_5.js"></script>
         <script src="data/incidencies_6.js"></script>
-        <script src="data/pas_de_vianants_7.js"></script>
+        <script src="data/pasdevianants_7.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[42.49408449929274,1.4972380807750876],[42.49912988098522,1.5042785505425338]]);
+        }).fitBounds([[42.48019743476541,1.4835338939872755],[42.494899300815085,1.4999019715225896]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -264,7 +264,52 @@
         });
         bounds_group.addLayer(layer_fonts_3);
         map.addLayer(layer_fonts_3);
-        function pop_lavabos_4(feature, layer) {
+        function pop_banc_qgis2web_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_banc_qgis2web_4_0() {
+            return {
+                pane: 'pane_banc_qgis2web_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/banc_qgis2web_4.svg',
+            iconSize: [22.799999999999997, 22.799999999999997]
+        }),
+                interactive: false,
+            }
+        }
+        map.createPane('pane_banc_qgis2web_4');
+        map.getPane('pane_banc_qgis2web_4').style.zIndex = 404;
+        map.getPane('pane_banc_qgis2web_4').style['mix-blend-mode'] = 'normal';
+        var layer_banc_qgis2web_4 = new L.geoJson(json_banc_qgis2web_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_banc_qgis2web_4',
+            layerName: 'layer_banc_qgis2web_4',
+            pane: 'pane_banc_qgis2web_4',
+            onEachFeature: pop_banc_qgis2web_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_banc_qgis2web_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_banc_qgis2web_4);
+        map.addLayer(layer_banc_qgis2web_4);
+        function pop_lavabos_qgis2web_5(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -280,88 +325,43 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_lavabos_4_0() {
+        function style_lavabos_qgis2web_5_0() {
             return {
-                pane: 'pane_lavabos_4',
+                pane: 'pane_lavabos_qgis2web_5',
                 shape: 'triangle',
-                radius: 4.0,
+                radius: 5.2,
                 opacity: 1,
                 color: 'rgba(0,0,0,1.0)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
-                weight: 1,
+                weight: 1.0,
                 fill: true,
                 fillOpacity: 1,
                 fillColor: 'rgba(255,255,255,1.0)',
-                interactive: false,
+                interactive: true,
             }
         }
-        map.createPane('pane_lavabos_4');
-        map.getPane('pane_lavabos_4').style.zIndex = 404;
-        map.getPane('pane_lavabos_4').style['mix-blend-mode'] = 'normal';
-        var layer_lavabos_4 = new L.geoJson(json_lavabos_4, {
+        map.createPane('pane_lavabos_qgis2web_5');
+        map.getPane('pane_lavabos_qgis2web_5').style.zIndex = 405;
+        map.getPane('pane_lavabos_qgis2web_5').style['mix-blend-mode'] = 'normal';
+        var layer_lavabos_qgis2web_5 = new L.geoJson(json_lavabos_qgis2web_5, {
             attribution: '',
-            interactive: false,
-            dataVar: 'json_lavabos_4',
-            layerName: 'layer_lavabos_4',
-            pane: 'pane_lavabos_4',
-            onEachFeature: pop_lavabos_4,
+            interactive: true,
+            dataVar: 'json_lavabos_qgis2web_5',
+            layerName: 'layer_lavabos_qgis2web_5',
+            pane: 'pane_lavabos_qgis2web_5',
+            onEachFeature: pop_lavabos_qgis2web_5,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.shapeMarker(latlng, style_lavabos_4_0(feature));
+                return L.shapeMarker(latlng, style_lavabos_qgis2web_5_0(feature));
             },
         });
-        bounds_group.addLayer(layer_lavabos_4);
-        map.addLayer(layer_lavabos_4);
-        function pop_bancs_5(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_bancs_5_0() {
-            return {
-                pane: 'pane_bancs_5',
-        rotationAngle: 0.0,
-        rotationOrigin: 'center center',
-        icon: L.icon({
-            iconUrl: 'markers/bancs_5.svg',
-            iconSize: [22.799999999999997, 22.799999999999997]
-        }),
-                interactive: false,
-            }
-        }
-        map.createPane('pane_bancs_5');
-        map.getPane('pane_bancs_5').style.zIndex = 405;
-        map.getPane('pane_bancs_5').style['mix-blend-mode'] = 'normal';
-        var layer_bancs_5 = new L.geoJson(json_bancs_5, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json_bancs_5',
-            layerName: 'layer_bancs_5',
-            pane: 'pane_bancs_5',
-            onEachFeature: pop_bancs_5,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.marker(latlng, style_bancs_5_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer_bancs_5);
-        map.addLayer(layer_bancs_5);
+        bounds_group.addLayer(layer_lavabos_qgis2web_5);
+        map.addLayer(layer_lavabos_qgis2web_5);
         function pop_incidencies_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
@@ -411,16 +411,10 @@
         });
         bounds_group.addLayer(layer_incidencies_6);
         map.addLayer(layer_incidencies_6);
-        function pop_pas_de_vianants_7(feature, layer) {
+        function pop_pasdevianants_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(String(feature.properties['layer']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['path'] !== null ? autolinker.link(String(feature.properties['path']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -430,9 +424,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_pas_de_vianants_7_0() {
+        function style_pasdevianants_7_0() {
             return {
-                pane: 'pane_pas_de_vianants_7',
+                pane: 'pane_pasdevianants_7',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -443,35 +437,35 @@
                 fill: true,
                 fillOpacity: 1,
                 fillColor: 'rgba(232,113,141,1.0)',
-                interactive: false,
+                interactive: true,
             }
         }
-        map.createPane('pane_pas_de_vianants_7');
-        map.getPane('pane_pas_de_vianants_7').style.zIndex = 407;
-        map.getPane('pane_pas_de_vianants_7').style['mix-blend-mode'] = 'normal';
-        var layer_pas_de_vianants_7 = new L.geoJson(json_pas_de_vianants_7, {
+        map.createPane('pane_pasdevianants_7');
+        map.getPane('pane_pasdevianants_7').style.zIndex = 407;
+        map.getPane('pane_pasdevianants_7').style['mix-blend-mode'] = 'normal';
+        var layer_pasdevianants_7 = new L.geoJson(json_pasdevianants_7, {
             attribution: '',
-            interactive: false,
-            dataVar: 'json_pas_de_vianants_7',
-            layerName: 'layer_pas_de_vianants_7',
-            pane: 'pane_pas_de_vianants_7',
-            onEachFeature: pop_pas_de_vianants_7,
+            interactive: true,
+            dataVar: 'json_pasdevianants_7',
+            layerName: 'layer_pasdevianants_7',
+            pane: 'pane_pasdevianants_7',
+            onEachFeature: pop_pasdevianants_7,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_pas_de_vianants_7_0(feature));
+                return L.circleMarker(latlng, style_pasdevianants_7_0(feature));
             },
         });
-        bounds_group.addLayer(layer_pas_de_vianants_7);
-        map.addLayer(layer_pas_de_vianants_7);
+        bounds_group.addLayer(layer_pasdevianants_7);
+        map.addLayer(layer_pasdevianants_7);
         var overlaysTree = [
         {label: '<b>QGIS2WEB</b>',  selectAllCheckbox: true, children: [
-            {label: '<img src="legend/pas_de_vianants_7.png" /> pas_de_vianants', layer: layer_pas_de_vianants_7},
+            {label: '<img src="legend/pasdevianants_7.png" /> pas de vianants', layer: layer_pasdevianants_7},
             {label: '<img src="legend/incidencies_6.png" /> incidencies', layer: layer_incidencies_6},
-            {label: '<img src="legend/bancs_5.png" /> bancs', layer: layer_bancs_5},
-            {label: '<img src="legend/lavabos_4.png" /> lavabos', layer: layer_lavabos_4},
+            {label: '<img src="legend/lavabos_qgis2web_5.png" /> lavabos_qgis2web', layer: layer_lavabos_qgis2web_5},
+            {label: '<img src="legend/banc_qgis2web_4.png" /> banc_qgis2web', layer: layer_banc_qgis2web_4},
             {label: '<img src="legend/fonts_3.png" /> fonts', layer: layer_fonts_3},
             {label: '<img src="legend/arbres_2.png" /> arbres', layer: layer_arbres_2},
             {label: '<img src="legend/voravies_1.png" /> voravies', layer: layer_voravies_1},]},

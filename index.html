@@ -37,7 +37,7 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.photon.js"></script>
         <script src="data/voravies_1.js"></script>
-        <script src="data/arbres_2.js"></script>
+        <script src="data/abres_2.js"></script>
         <script src="data/fonts_3.js"></script>
         <script src="data/banc_qgis2web_4.js"></script>
         <script src="data/lavabos_qgis2web_5.js"></script>
@@ -46,7 +46,7 @@
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[42.48019743476541,1.4835338939872755],[42.494899300815085,1.4999019715225896]]);
+        }).fitBounds([[42.49260258979149,1.4920515669675003],[42.49592450026404,1.501158827139436]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -170,7 +170,7 @@
         });
         bounds_group.addLayer(layer_voravies_1);
         map.addLayer(layer_voravies_1);
-        function pop_arbres_2(feature, layer) {
+        function pop_abres_2(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -183,9 +183,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_arbres_2_0() {
+        function style_abres_2_0() {
             return {
-                pane: 'pane_arbres_2',
+                pane: 'pane_abres_2',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(0,0,0,1.0)',
@@ -199,26 +199,26 @@
                 interactive: false,
             }
         }
-        map.createPane('pane_arbres_2');
-        map.getPane('pane_arbres_2').style.zIndex = 402;
-        map.getPane('pane_arbres_2').style['mix-blend-mode'] = 'normal';
-        var layer_arbres_2 = new L.geoJson(json_arbres_2, {
+        map.createPane('pane_abres_2');
+        map.getPane('pane_abres_2').style.zIndex = 402;
+        map.getPane('pane_abres_2').style['mix-blend-mode'] = 'normal';
+        var layer_abres_2 = new L.geoJson(json_abres_2, {
             attribution: '',
             interactive: false,
-            dataVar: 'json_arbres_2',
-            layerName: 'layer_arbres_2',
-            pane: 'pane_arbres_2',
-            onEachFeature: pop_arbres_2,
+            dataVar: 'json_abres_2',
+            layerName: 'layer_abres_2',
+            pane: 'pane_abres_2',
+            onEachFeature: pop_abres_2,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_arbres_2_0(feature));
+                return L.circleMarker(latlng, style_abres_2_0(feature));
             },
         });
-        bounds_group.addLayer(layer_arbres_2);
-        map.addLayer(layer_arbres_2);
+        bounds_group.addLayer(layer_abres_2);
+        map.addLayer(layer_abres_2);
         function pop_fonts_3(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
@@ -467,7 +467,7 @@
             {label: '<img src="legend/lavabos_qgis2web_5.png" /> lavabos_qgis2web', layer: layer_lavabos_qgis2web_5},
             {label: '<img src="legend/banc_qgis2web_4.png" /> banc_qgis2web', layer: layer_banc_qgis2web_4},
             {label: '<img src="legend/fonts_3.png" /> fonts', layer: layer_fonts_3},
-            {label: '<img src="legend/arbres_2.png" /> arbres', layer: layer_arbres_2},
+            {label: '<img src="legend/abres_2.png" /> abres', layer: layer_abres_2},
             {label: '<img src="legend/voravies_1.png" /> voravies', layer: layer_voravies_1},]},
             {label: "Google Satellite", layer: layer_GoogleSatellite_0, radioGroup: 'bm' },]
         var lay = L.control.layers.tree(null, overlaysTree,{
